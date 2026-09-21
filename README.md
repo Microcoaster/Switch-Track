@@ -30,8 +30,6 @@ Le module s'authentifie à la connexion, puis échange en JSON.
 
 **Identification, module vers serveur**
 
-<img src="docs/blocs/01.png" alt="JSON : identification, module vers serveur" width="100%">
-
 ```json
 {
   "type": "module_identify",
@@ -44,8 +42,6 @@ Le module s'authentifie à la connexion, puis échange en JSON.
 ```
 
 **Commande, serveur vers module**
-
-<img src="docs/blocs/02.png" alt="JSON : commande, serveur vers module" width="100%">
 
 ```json
 {
@@ -64,8 +60,6 @@ Le module répond à chaque commande et envoie une télémétrie périodique ave
 
 Nécessite [PlatformIO](https://platformio.org/) dans Visual Studio Code.
 
-<img src="docs/blocs/03.png" alt="Terminal bash : compiler et téléverser" width="100%">
-
 ```bash
 pio run                  # compilation
 pio run -t upload        # téléversement du firmware
@@ -81,8 +75,6 @@ pio device monitor       # console série, 115200 bauds
 Les identifiants WiFi restent en mémoire du module, jamais dans le dépôt.
 
 <img src="docs/sections/s05.png" alt="05 Écosystème" width="100%">
-
-<img src="docs/blocs/04.png" alt="Fichier platformio.ini : bibliothèques" width="100%">
 
 ```ini
 links2004/WebSockets        ; liaison avec le contrôleur

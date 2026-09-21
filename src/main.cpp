@@ -121,7 +121,7 @@ void setup() {
   Serial.begin(115200);
   Serial.println();
   Serial.println("=========================================");
-  Serial.println("🚀 MicroCoaster - Switch Track v2.0.0");
+  Serial.println("MicroCoaster - Switch Track v2.0.0");
   Serial.println("=========================================");
   Serial.println();
 
@@ -140,16 +140,16 @@ void setup() {
   
   // Mise en état sûr du verrin au démarrage
   coast(); // Arrêt du verrin (roue libre)
-  Serial.println("[HARDWARE] ⚙️  DRV8871 initialisé - Contrôle verrin avec temporisations sécurisées");
+  Serial.println("[HARDWARE]   DRV8871 initialisé - Contrôle verrin avec temporisations sécurisées");
   
   // Affichage de la position initiale et allumage LED correspondante
   updateLEDs();
-  Serial.println("[SWITCH TRACK] 📍 Position initiale: " + currentPosition);
+  Serial.println("[SWITCH TRACK]  Position initiale: " + currentPosition);
 
   // *** CONFIGURATION DU GESTIONNAIRE WIFI ***
   
   // Configuration du point d'accès de secours (fallback)
-  Serial.println("📡 Configuration du point d'accès de secours...");
+  Serial.println("Configuration du point d'accès de secours...");
   wifi.setAPCredentials(ESP_WIFI_SSID, ESP_WIFI_PASSWORD);
   Serial.print("   ├─ SSID: ");
   Serial.println(ESP_WIFI_SSID);
@@ -157,7 +157,7 @@ void setup() {
   Serial.println(ESP_WIFI_PASSWORD);
   
   // Configuration des timeouts du portail captif
-  Serial.println("⏱️  Configuration des timeouts...");
+  Serial.println("Configuration des timeouts...");
   wifi.setPortalTimeout(3600);     // 60 minutes (très long pour debug)
   wifi.setAPClientCheck(true);     // Ne pas fermer si des clients sont connectés
   wifi.setWebClientCheck(true);    // Chaque requête HTTP remet à zéro le timer
@@ -166,7 +166,7 @@ void setup() {
   Serial.println("   └─ Vérification requêtes web: activée");
   
   // Configuration avancée du portail captif
-  Serial.println("🔧 Configuration avancée...");
+  Serial.println("Configuration avancée...");
   wifi.setCaptivePortal(true);      // Activer les redirections pour portail captif
   Serial.println("   ├─ Portail captif: activé");
   
@@ -178,21 +178,21 @@ void setup() {
   
   // Protection des fichiers critiques (empêche leur suppression accidentelle)
   wifi.setProtectedJsons({"/wifi.json"});  // Protège le fichier de configuration WiFi
-  Serial.println("🛡️  Protection fichiers: /wifi.json");
+  Serial.println("Protection fichiers: /wifi.json");
   
   // Activation du bouton de secours (GPIO 0 par défaut)
   wifi.enableButtonPortal(true);    // Bouton 2-5s = ouvre portail, ≥5s = efface identifiants
-  Serial.println("🔘 Bouton de secours: GPIO 0 (2-5s = portail, ≥5s = reset)");
+  Serial.println("Bouton de secours: GPIO 0 (2-5s = portail, ≥5s = reset)");
   
   // *** INITIALISATION DU WIFI MANAGER ***
   
   Serial.println();
-  Serial.println("🔄 Initialisation du WiFi Manager...");
+  Serial.println("Initialisation du WiFi Manager...");
   wifi.begin();  // Monte le système de fichiers, charge /wifi.json si présent
-  Serial.println("💾 Système de fichiers LittleFS monté");
-  Serial.println("📁 Recherche du fichier de configuration /wifi.json...");
+  Serial.println("Système de fichiers LittleFS monté");
+  Serial.println("Recherche du fichier de configuration /wifi.json...");
   
-  Serial.println("🌐 Tentative de connexion WiFi...");
+  Serial.println("Tentative de connexion WiFi...");
   wifi.run();    // Essaie de se connecter en STA; si ça échoue, applique la politique de fallback
   
   // Vérification du statut après initialisation
@@ -201,22 +201,22 @@ void setup() {
   // *** VÉRIFICATION ÉTAT CONNEXION ***
   
   if (wifi.isConnected()) {
-    Serial.println("✅ Connexion WiFi réussie !");
-    Serial.println("📡 IP: " + WiFi.localIP().toString());
-    Serial.println("🌐 Mode: Client WiFi (STA)");
+    Serial.println("[OK] Connexion WiFi réussie !");
+    Serial.println("IP: " + WiFi.localIP().toString());
+    Serial.println("Mode: Client WiFi (STA)");
     
     // Connexion WebSocket automatique après succès WiFi
     connectSocket();
   } else {
-    Serial.println("⚠️  Connexion WiFi échouée");
-    Serial.println("🔧 Ouverture du portail de configuration...");
-    Serial.println("📡 Point d'accès: WifiManager-MicroCoaster");
-    Serial.println("🌐 IP du portail: 192.168.4.1");
-    Serial.println("🔗 Connectez-vous au WiFi puis allez sur http://192.168.4.1");
+    Serial.println("[!] Connexion WiFi échouée");
+    Serial.println("Ouverture du portail de configuration...");
+    Serial.println("Point d'accès: WifiManager-MicroCoaster");
+    Serial.println("IP du portail: 192.168.4.1");
+    Serial.println("Connectez-vous au WiFi puis allez sur http://192.168.4.1");
   }
   
   Serial.println();
-  Serial.println("✅ Initialisation terminée !");
+  Serial.println("[OK] Initialisation terminée !");
   Serial.println("=========================================");
 }
 
@@ -244,20 +244,20 @@ void loop() {
     
     // Affichage du statut de connexion
     if (currentState) {
-      Serial.println("🟢 WiFi connecté - IP: " + WiFi.localIP().toString() + 
+      Serial.println("[UP] WiFi connecté - IP: " + WiFi.localIP().toString() + 
                      " | Signal: " + String(WiFi.RSSI()) + " dBm");
     } else {
-      Serial.println("🔴 WiFi déconnecté - Portail de configuration actif sur 192.168.4.1");
+      Serial.println("[DOWN] WiFi déconnecté - Portail de configuration actif sur 192.168.4.1");
     }
     
     // Détection des changements d'état WiFi pour actions automatiques
     if (currentState != lastConnectionState) {
       if (currentState) {
-        Serial.println("🎉 Connexion WiFi établie !");
+        Serial.println("Connexion WiFi établie !");
         // Reconnexion WebSocket automatique après retour WiFi
         connectSocket();
       } else {
-        Serial.println("⚠️  Connexion WiFi perdue, basculement en mode portail...");
+        Serial.println("[!] Connexion WiFi perdue, basculement en mode portail...");
         // Reset de l'authentification et état sûr des LEDs
         isAuthenticated = false;
         digitalWrite(LED_LEFT_PIN, LOW);
@@ -297,50 +297,50 @@ void loop() {
 
 // Établit la connexion WebSocket avec le serveur (ws ou wss selon configuration)
 void connectSocket() {
-  Serial.println("[WEBSOCKET] 🔗 Connexion WebSocket...");
-  Serial.println("[WEBSOCKET] 📍 Module ID: " + MODULE_ID);
-  Serial.println("[WEBSOCKET] 🔑 Password: " + MODULE_PASSWORD.substring(0, 8) + "...");
+  Serial.println("[WEBSOCKET]  Connexion WebSocket...");
+  Serial.println("[WEBSOCKET]  Module ID: " + MODULE_ID);
+  Serial.println("[WEBSOCKET]  Password: " + MODULE_PASSWORD.substring(0, 8) + "...");
   
   // Configuration de la connexion WebSocket selon le flag SSL
   #if SERVER_USE_SSL
-    Serial.println("[WEBSOCKET] 🔒 Mode: WSS (SSL/TLS activé)");
+    Serial.println("[WEBSOCKET]  Mode: WSS (SSL/TLS activé)");
     if (strlen(server_fingerprint) > 0) {
-      Serial.println("[WEBSOCKET] 🔐 Vérification empreinte SSL activée");
+      Serial.println("[WEBSOCKET]  Vérification empreinte SSL activée");
       webSocket.beginSSL(server_host, server_port, websocket_path, server_fingerprint);
     } else {
-      Serial.println("[WEBSOCKET] ⚠️  Vérification empreinte SSL désactivée (non recommandé en production)");
+      Serial.println("[WEBSOCKET] [!] Vérification empreinte SSL désactivée (non recommandé en production)");
       webSocket.beginSSL(server_host, server_port, websocket_path);
     }
-    Serial.printf("[WEBSOCKET] 🤖 WebSocket: wss://%s:%d%s\n", server_host, server_port, websocket_path);
+    Serial.printf("[WEBSOCKET]  WebSocket: wss://%s:%d%s\n", server_host, server_port, websocket_path);
   #else
-    Serial.println("[WEBSOCKET] 🔓 Mode: WS (plain, sans SSL)");
+    Serial.println("[WEBSOCKET]  Mode: WS (plain, sans SSL)");
     webSocket.begin(server_host, server_port, websocket_path);
-    Serial.printf("[WEBSOCKET] 🤖 WebSocket: ws://%s:%d%s\n", server_host, server_port, websocket_path);
+    Serial.printf("[WEBSOCKET]  WebSocket: ws://%s:%d%s\n", server_host, server_port, websocket_path);
   #endif
   
   webSocket.onEvent(webSocketEvent);           // Gestionnaire d'événements
   webSocket.setReconnectInterval(5000);        // Reconnexion automatique toutes les 5s
   webSocket.enableHeartbeat(15000, 3000, 2);   // Heartbeat WebSocket: 15s interval, 3s timeout, 2 essais
   
-  Serial.println("[WEBSOCKET] ✅ ESP32 Switch Track prêt (Architecture hybride)!");
+  Serial.println("[WEBSOCKET] [OK] ESP32 Switch Track prêt (Architecture hybride)!");
 }
 
 void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
   switch(type) {
     case WStype_CONNECTED:
-      Serial.println("[SWITCH TRACK] 🟢 Connecté au serveur WebSocket");
+      Serial.println("[SWITCH TRACK] [UP] Connecté au serveur WebSocket");
       authenticateModule();
       break;
       
     case WStype_DISCONNECTED:
-      Serial.println("[SWITCH TRACK] 🔴 Déconnexion du serveur");
+      Serial.println("[SWITCH TRACK] [DOWN] Déconnexion du serveur");
       isAuthenticated = false;
       digitalWrite(LED_LEFT_PIN, LOW);
       digitalWrite(LED_RIGHT_PIN, LOW);
       break;
       
     case WStype_TEXT: {
-      Serial.println("[SWITCH TRACK] 📡 Message reçu: " + String((char*)payload));
+      Serial.println("[SWITCH TRACK]  Message reçu: " + String((char*)payload));
       
       JsonDocument doc;
       deserializeJson(doc, (char*)payload);
@@ -354,8 +354,8 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
       } else if (msgType == "error") {
         handleError((char*)payload);
       } else {
-        Serial.println("[SWITCH TRACK] ⚠️ Événement non géré: '" + msgType + "'");
-        Serial.println("[SWITCH TRACK] 🔍 Message complet: " + String((char*)payload));
+        Serial.println("[SWITCH TRACK] [!] Événement non géré: '" + msgType + "'");
+        Serial.println("[SWITCH TRACK]  Message complet: " + String((char*)payload));
       }
       break;
     }
@@ -366,7 +366,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 }
 
 void authenticateModule() {
-  Serial.println("[SWITCH TRACK] 🔐 Authentification WebSocket natif...");
+  Serial.println("[SWITCH TRACK]  Authentification WebSocket natif...");
   
   // Format WebSocket natif
   JsonDocument authData;
@@ -381,11 +381,11 @@ void authenticateModule() {
   serializeJson(authData, authMessage);
   webSocket.sendTXT(authMessage);
   
-  Serial.println("[SWITCH TRACK] 📤 Authentification envoyée: " + authMessage);
+  Serial.println("[SWITCH TRACK]  Authentification envoyée: " + authMessage);
 }
 
 void handleConnected(const char* payload) {
-  Serial.println("[SWITCH TRACK] ✅ Module authentifié WebSocket natif");
+  Serial.println("[SWITCH TRACK] [OK] Module authentifié WebSocket natif");
   
   isAuthenticated = true;
   updateLEDs(); // Mettre à jour les LEDs selon la position
@@ -397,7 +397,7 @@ void handleConnected(const char* payload) {
 
 void handleCommand(const char* payload) {
   if (!isAuthenticated) {
-    Serial.println("[SWITCH TRACK] ⚠️ Commande refusée - non authentifié");
+    Serial.println("[SWITCH TRACK] [!] Commande refusée - non authentifié");
     return;
   }
   
@@ -406,7 +406,7 @@ void handleCommand(const char* payload) {
   deserializeJson(doc, payload);
   
   String command = doc["data"]["command"];
-  Serial.println("[SWITCH TRACK] 🎮 Commande reçue: " + command);
+  Serial.println("[SWITCH TRACK]  Commande reçue: " + command);
   
   String newPosition = currentPosition;
   String status = "success";
@@ -414,7 +414,7 @@ void handleCommand(const char* payload) {
   // Traitement des commandes
   if (command == "switch_left" || command == "left" || command == "switch_to_A") {
     newPosition = "left";
-    Serial.println("[SWITCH TRACK] 🔄 Aiguillage basculé vers la GAUCHE");
+    Serial.println("[SWITCH TRACK]  Aiguillage basculé vers la GAUCHE");
 
      // Commande verrin gauche
      safeDir(leftVerrin);
@@ -423,7 +423,7 @@ void handleCommand(const char* payload) {
     
   } else if (command == "switch_right" || command == "right" || command == "switch_to_B") {
     newPosition = "right";
-    Serial.println("[SWITCH TRACK] 🔄 Aiguillage basculé vers la DROITE");
+    Serial.println("[SWITCH TRACK]  Aiguillage basculé vers la DROITE");
 
      // Commande verrin droite
      safeDir(rightVerrin);
@@ -432,10 +432,10 @@ void handleCommand(const char* payload) {
     
   } else if (command == "get_position") {
     // Pas de changement de position, juste retourner l'état
-    Serial.println("[SWITCH TRACK] 📍 Position actuelle: " + currentPosition);
+    Serial.println("[SWITCH TRACK]  Position actuelle: " + currentPosition);
     
   } else {
-    Serial.println("[SWITCH TRACK] ❌ Commande inconnue: " + command);
+    Serial.println("[SWITCH TRACK] [ERREUR] Commande inconnue: " + command);
     status = "unknown_command";
   }
   
@@ -445,11 +445,11 @@ void handleCommand(const char* payload) {
   // Envoyer la réponse de commande (WebSocket natif)
   sendCommandResponse(command, status, currentPosition);
   
-  Serial.println("[SWITCH TRACK] ✅ Commande exécutée: " + currentPosition);
+  Serial.println("[SWITCH TRACK] [OK] Commande exécutée: " + currentPosition);
 }
 
 void handleError(const char* payload) {
-  Serial.println("[SWITCH TRACK] ❌ Erreur reçue du serveur");
+  Serial.println("[SWITCH TRACK] [ERREUR] Erreur reçue du serveur");
   
   isAuthenticated = false;
   // Éteindre toutes les LEDs en cas d'erreur
@@ -461,11 +461,11 @@ void updateLEDs() {
   if (currentPosition == "left") {
     digitalWrite(LED_LEFT_PIN, HIGH);   // LED gauche ON
     digitalWrite(LED_RIGHT_PIN, LOW);   // LED droite OFF
-    Serial.println("[SWITCH TRACK] 💡 LED GAUCHE allumée");
+    Serial.println("[SWITCH TRACK]  LED GAUCHE allumée");
   } else if (currentPosition == "right") {
     digitalWrite(LED_LEFT_PIN, LOW);    // LED gauche OFF
     digitalWrite(LED_RIGHT_PIN, HIGH);  // LED droite ON
-    Serial.println("[SWITCH TRACK] 💡 LED DROITE allumée");
+    Serial.println("[SWITCH TRACK]  LED DROITE allumée");
   }
 }
 
@@ -485,7 +485,7 @@ void sendCommandResponse(const String& command, const String& status, const Stri
   serializeJson(doc, message);
   webSocket.sendTXT(message);
   
-  Serial.printf("[SWITCH TRACK] 📤 Réponse: %s -> %s\n", command.c_str(), status.c_str());
+  Serial.printf("[SWITCH TRACK]  Réponse: %s -> %s\n", command.c_str(), status.c_str());
 }
 
 void sendHeartbeat() {
@@ -504,7 +504,7 @@ void sendHeartbeat() {
   serializeJson(doc, message);
   webSocket.sendTXT(message);
   
-  Serial.println("[SWITCH TRACK] 💓 Heartbeat envoyé");
+  Serial.println("[SWITCH TRACK]  Heartbeat envoyé");
 }
 
 void sendTelemetry() {
@@ -522,5 +522,5 @@ void sendTelemetry() {
   serializeJson(doc, message);
   webSocket.sendTXT(message);
   
-  Serial.println("[SWITCH TRACK] 📊 Télémétrie envoyée");
+  Serial.println("[SWITCH TRACK]  Télémétrie envoyée");
 }

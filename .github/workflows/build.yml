@@ -30,5 +30,10 @@ jobs:
           sed -i 's|<mot de passe du portail, 8 caracteres minimum>|motdepassecompilation|' include/env.h
           sed -i 's|<secret du module>|secretdecompilation|' include/env.h
 
-      - name: Compiler
+      - name: Compiler le firmware
         run: pio run
+
+      # Le firmware peut tenir en flash pendant que le portail déborde de
+      # son système de fichiers. Les deux images se vérifient séparément.
+      - name: Construire l'image du système de fichiers
+        run: pio run -t buildfs

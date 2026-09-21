@@ -4,6 +4,6 @@ version: 2
 # suivre. Seules les actions du workflow sont surveillées ici.
 updates:
   - package-ecosystem: github-actions
-    directory: "/"
+    directory: /
     schedule:
       interval: monthly

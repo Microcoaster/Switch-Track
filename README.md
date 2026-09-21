@@ -14,25 +14,15 @@ Comme les autres modules, il se configure au premier démarrage par portail capt
 
 Le module ne décide rien. Il reçoit un ordre de position, actionne le vérin, vérifie que la position est atteinte, et rend compte. C'est le contrôleur qui sait si la voie en aval est libre et si le changement est autorisé.
 
-```
-Ordre reçu           switch_left ou switch_right
-Vérin actionné       sens imposé au DRV8871
-Position atteinte    LED mise à jour, réponse envoyée au serveur
-Sans ordre           le vérin ne bouge pas, la position est conservée
-```
+<img src="docs/schemas/principe.png" alt="Ordre reçu : le serveur envoie switch_left ou switch_right. Vérin actionné : le sens est imposé au DRV8871, qui inverse la polarité. Position atteinte : la LED correspondante s'allume et la réponse part vers le serveur. Sans ordre : le vérin ne bouge pas, la position est conservée." width="100%">
 
 La position courante est remontée à chaque connexion et à chaque changement, pour que le serveur ne se désynchronise jamais de la réalité du circuit.
 
 <img src="docs/sections/s02.png" alt="02 Matériel" width="100%">
 
-| Élément | Broche | Rôle |
-|:--|:--|:--|
-| LED position gauche | GPIO 2 | Voie déviée active |
-| LED position droite | GPIO 4 | Voie directe active |
-| Driver DRV8871 | | Pilotage du vérin, deux sens |
-| Vérin électrique | | Déplacement de la voie mobile |
+<img src="docs/schemas/brochage.png" alt="Actionneur DRV8871 : GPIO 21 pour IN1, vérin en sens horaire ; GPIO 22 pour IN2, vérin en sens anti-horaire. Signalisation de position : GPIO 2 pour la LED gauche, voie déviée active ; GPIO 4 pour la LED droite, voie directe active." width="100%">
 
-Le DRV8871 est un pont en H : il inverse la polarité aux bornes du vérin selon le sens demandé. Sa protection thermique et sa limitation de courant évitent d'endommager le vérin si la voie est bloquée.
+Le DRV8871 est un pont en H : il met `IN1` ou `IN2` à l'état haut pour inverser la polarité aux bornes du vérin, et les met tous deux à zéro pour l'arrêter. Sa protection thermique et sa limitation de courant évitent d'endommager le vérin si la voie est bloquée.
 
 <img src="docs/sections/s03.png" alt="03 Protocole" width="100%">
 
@@ -60,11 +50,7 @@ Le module s'authentifie à la connexion, puis échange en JSON.
 }
 ```
 
-| Commande | Effet |
-|:--|:--|
-| `switch_left`, `left`, `switch_to_A` | Bascule vers la gauche |
-| `switch_right`, `right`, `switch_to_B` | Bascule vers la droite |
-| `get_position` | Retourne la position sans bouger |
+<img src="docs/schemas/commandes.png" alt="switch_left : bascule la voie vers la gauche, accepte aussi left et switch_to_A. switch_right : bascule la voie vers la droite, accepte aussi right et switch_to_B. get_position : retourne la position courante sans actionner le vérin." width="100%">
 
 Le module répond à chaque commande et envoie une télémétrie périodique avec sa position et son temps de fonctionnement.
 
@@ -96,7 +82,7 @@ bblanchon/ArduinoJson       ; messages échangés
 ayresnet/AyresWiFiManager   ; portail captif et reconnexion
 ```
 
-Système de fichiers embarqué : **LittleFS**, il héberge les pages du portail. Le socle commun à tous les modules est le [WiFi Manager](https://github.com/Microcoaster/MicroCoaster_WifiManager), et le pilotage se fait depuis la [WebApp](https://github.com/Microcoaster/MicroCoasterWebApp).
+Système de fichiers embarqué : **LittleFS**, il héberge les pages du portail. Le socle commun à tous les modules est le [WiFi Manager](https://github.com/Microcoaster/MicroCoaster_WifiManager), le [Banc LED](https://github.com/Microcoaster/ESP-32-led) en est la version d'essai sans mécanique, et le pilotage se fait depuis la [WebApp](https://github.com/Microcoaster/MicroCoasterWebApp).
 
 ---
 

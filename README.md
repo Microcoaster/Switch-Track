@@ -10,7 +10,7 @@ Comme les autres modules, il se configure au premier démarrage par portail capt
 
 **Version 2.0.0**
 
-## Principe
+<img src="docs/sections/s01.png" alt="01 Principe" width="100%">
 
 Le module ne décide rien. Il reçoit un ordre de position, actionne le vérin, vérifie que la position est atteinte, et rend compte. C'est le contrôleur qui sait si la voie en aval est libre et si le changement est autorisé.
 
@@ -23,7 +23,7 @@ Sans ordre           le vérin ne bouge pas, la position est conservée
 
 La position courante est remontée à chaque connexion et à chaque changement, pour que le serveur ne se désynchronise jamais de la réalité du circuit.
 
-## Matériel
+<img src="docs/sections/s02.png" alt="02 Matériel" width="100%">
 
 | Élément | Broche | Rôle |
 |:--|:--|:--|
@@ -34,7 +34,7 @@ La position courante est remontée à chaque connexion et à chaque changement, 
 
 Le DRV8871 est un pont en H : il inverse la polarité aux bornes du vérin selon le sens demandé. Sa protection thermique et sa limitation de courant évitent d'endommager le vérin si la voie est bloquée.
 
-## Protocole
+<img src="docs/sections/s03.png" alt="03 Protocole" width="100%">
 
 Le module s'authentifie à la connexion, puis échange en JSON.
 
@@ -68,11 +68,9 @@ Le module s'authentifie à la connexion, puis échange en JSON.
 
 Le module répond à chaque commande et envoie une télémétrie périodique avec sa position et son temps de fonctionnement.
 
-## Liaison
-
 `SERVER_USE_SSL` choisit entre `ws` et `wss`. Sur un réseau local de développement, `ws` suffit. En production, ou dès que le serveur est joignable au-delà du réseau domestique, passez en `wss` : sans chiffrement, le secret d'authentification du module circule en clair.
 
-## Compiler et téléverser
+<img src="docs/sections/s04.png" alt="04 Mise en service" width="100%">
 
 Nécessite [PlatformIO](https://platformio.org/) dans Visual Studio Code.
 
@@ -83,15 +81,14 @@ pio run -t uploadfs      # téléversement du portail vers LittleFS
 pio device monitor       # console série, 115200 bauds
 ```
 
-## Première mise en service
-
 1. Alimenter le module. Il crée un point d'accès WiFi.
 2. S'y connecter et ouvrir `http://192.168.4.1`.
 3. Renseigner le réseau de destination.
 4. Le module redémarre, rejoint le réseau et s'annonce auprès du serveur.
 
 Les identifiants WiFi restent en mémoire du module, jamais dans le dépôt.
-## Bibliothèques
+
+<img src="docs/sections/s05.png" alt="05 Écosystème" width="100%">
 
 ```ini
 links2004/WebSockets        ; liaison avec le contrôleur
@@ -99,8 +96,8 @@ bblanchon/ArduinoJson       ; messages échangés
 ayresnet/AyresWiFiManager   ; portail captif et reconnexion
 ```
 
-Système de fichiers embarqué : **LittleFS**, il héberge les pages du portail.
+Système de fichiers embarqué : **LittleFS**, il héberge les pages du portail. Le socle commun à tous les modules est le [WiFi Manager](https://github.com/Microcoaster/MicroCoaster_WifiManager), et le pilotage se fait depuis la [WebApp](https://github.com/Microcoaster/MicroCoasterWebApp).
 
 ---
 
-<sub>MicroCoaster · Auteurs : CyberSpaceRS, Yamakajump</sub>
+<sub>MicroCoaster · Auteur : Cybertrist</sub>

@@ -1,4 +1,9 @@
-# 🎢 MicroCoaster - Module Switch Track ESP32
+<div align="center">
+
+<img src="docs/banniere.png" alt="Switch Track, module d'aiguillage ESP32" width="100%">
+
+</div>
+
 
 > Module intelligent d'aiguillage sécurisé pour montagnes russes miniatures avec gestion WiFi automatique et contrôle distant WebSocket (WS/WSS).
 

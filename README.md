@@ -91,13 +91,6 @@ pio device monitor       # console série, 115200 bauds
 4. Le module redémarre, rejoint le réseau et s'annonce auprès du serveur.
 
 Les identifiants WiFi restent en mémoire du module, jamais dans le dépôt.
-
-## Un point à traiter
-
-`MODULE_PASSWORD` est actuellement écrit en clair dans `src/main.cpp`. Le secret d'un module ne devrait pas vivre dans le code : il se retrouve dans l'historique Git, dans chaque copie du dépôt, et dans tout binaire distribué.
-
-La correction consiste à le sortir vers la mémoire non volatile de l'ESP32, renseigné au moment de l'appairage par le portail captif, au même titre que les identifiants WiFi.
-
 ## Bibliothèques
 
 ```ini

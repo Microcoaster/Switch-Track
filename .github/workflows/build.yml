@@ -1,0 +1,34 @@
+name: Build
+
+# Compile le firmware à chaque pull request. Le dépôt ne versionne pas
+# include/env.h : le workflow le génère à partir de l'exemple, avec des
+# valeurs factices. On vérifie que le code compile, pas qu'il se connecte.
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  platformio:
+    name: Compilation ESP32
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Installer PlatformIO
+        run: pip install --upgrade platformio
+
+      - name: Générer un env.h de compilation
+        run: |
+          set -e
+          cp include/env.h.example include/env.h
+          sed -i 's|<mot de passe du portail, 8 caracteres minimum>|motdepassecompilation|' include/env.h
+          sed -i 's|<secret du module>|secretdecompilation|' include/env.h
+
+      - name: Compiler
+        run: pio run

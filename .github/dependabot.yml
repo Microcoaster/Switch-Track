@@ -1,0 +1,9 @@
+version: 2
+
+# PlatformIO résout ses bibliothèques lui-même, Dependabot ne sait pas les
+# suivre. Seules les actions du workflow sont surveillées ici.
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly

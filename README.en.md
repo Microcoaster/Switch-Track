@@ -89,7 +89,7 @@ bblanchon/ArduinoJson       ; the messages exchanged
 ayresnet/AyresWiFiManager   ; captive portal and reconnection
 ```
 
-Embedded filesystem: **LittleFS**, which holds the portal pages. The common base for every module is the [WiFi Manager](https://github.com/Microcoaster/MicroCoaster_WifiManager), the [LED bench](https://github.com/Microcoaster/ESP-32-led) is its test version without the mechanics, and the driving is done from the [WebApp](https://github.com/Microcoaster/MicroCoasterWebApp).
+Embedded filesystem: **LittleFS**, which holds the portal pages. The common base for every module is the [WiFi Manager](https://github.com/Microcoaster/MicroCoaster_WifiManager/blob/main/README.en.md), the [LED bench](https://github.com/Microcoaster/ESP-32-led/blob/main/README.en.md) is its test version without the mechanics, and the driving is done from the [WebApp](https://github.com/Microcoaster/MicroCoasterWebApp/blob/main/README.en.md).
 
 ---
 

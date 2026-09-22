@@ -5,7 +5,7 @@
  * Module intelligent d'aiguillage sécurisé pour montagnes russes miniatures
  * Combine gestion WiFi automatique, contrôle d'aiguillage physique et communication WebSocket
  * 
- * Auteurs: CyberSpaceRS, Yamakajump
+ * Auteurs: Cybertrist, Yamakajump
  * Version: 2.0.0
  */
 
